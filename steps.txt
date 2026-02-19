@@ -1,7 +1,0 @@
-https://srv02.irix.ovh:8443/
-
-go to: ssh versapm@82.208.20.190
-add pass: T*********
-
-cd /var/www/vhosts/versa-plus.com/httpdocs
-vendor/bin/drush cr
