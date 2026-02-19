@@ -1,0 +1,30 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 1rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+#log {
+  margin: 0 0 1.5rem 0;
+  font-size: 0.875rem;
+}
+
+
+:is(.project-card-video, .single-project) {
+  width: min(500px, 90vw);
+  margin: 0 auto;
+}
+
+
+video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+

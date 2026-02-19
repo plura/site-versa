@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>iPhone Safari Video Test</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<meta name="title" content="iPhone Safari Video Test">
+	<meta name="description" content="Simple page to test video behaviour on iPhone Safari.">
+
+	<meta property="og:title" content="iPhone Safari Video Test">
+	<meta property="og:description" content="Simple page to test video behaviour on iPhone Safari.">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://basecamportugal.com/test-video/grid/">
+
+	<link rel="stylesheet" href="../assets/css/styles.css" />
+	<script src="assets/js/scripts.js"></script>
+
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const video2 = document.getElementById('video2');
+			const logEl  = document.getElementById('log');
+
+			if (video2) {
+				setVideoPosterFromFrame({
+					video: video2,
+					time: 0.5,
+					log: logEl
+				});
+			}
+		});
+	</script>
+</head>
+<body>
+	<div id="log"></div>
+
+
+	<div class="project-card">
+		<div class="project-card-video">
+			<video
+				id="video1"
+				controls
+				playsinline
+				webkit-playsinline
+				muted
+				preload="auto"
+			>
+				<source src="../assets/media/Tap_to_Pay_on_Android_With_Square_HERO_PHOTO.mp4" type="video/mp4" />
+				Your browser does not support the video tag.
+			</video>
+		</div>
+	</div>
+</body>
+</html>
