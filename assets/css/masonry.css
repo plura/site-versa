@@ -4,15 +4,22 @@
 	column-gap: 0;
 }
 
-/* Reset items from column layout */
+/* Reset items from column layout - Mobile first (1 column) */
 .project-gallery .gallery.has-masonry .gallery__item {
 	display: block;
-	width: calc(50% - 1rem);
-	margin: 0 0 2rem;
+	width: 100%;
 
 	break-inside: initial;
 	-webkit-column-break-inside: initial;
 	page-break-inside: initial;
+}
+
+/* Desktop: 2 columns */
+@media (min-width: 768px) {
+	.project-gallery .gallery.has-masonry .gallery__item {
+		width: calc(50% - 1rem);
+		margin: 0 0 2rem;
+	}
 }
 
 /* Safari override reset */
