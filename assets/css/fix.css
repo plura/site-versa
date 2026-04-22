@@ -1,0 +1,63 @@
+/* ==============================================================
+ * SAFARI & IOS FIXES
+ * Temporary browser-specific patches applied externally because the
+ * Drupal theme cannot be refactored at this stage.
+ *
+ * These are functional fixes — NOT design changes.
+ * ============================================================== */
+
+
+/* --------------------------------------------------------------
+ * FIX 1 — Safari: two-column gallery misalignment
+ *
+ * Summary:
+ * Safari’s multi-column layout collapses margins differently,
+ * causing the first item in the second column to shift downward.
+ *
+ * Fix:
+ * Use inline-block items, avoid top margins, and force overflow
+ * handling to normalize Safari’s column rendering.
+ * -------------------------------------------------------------- */
+.is-safari .project-gallery .gallery {
+	column-count: 2;
+	column-gap: 2rem;
+	overflow: hidden;
+}
+
+.is-safari .project-gallery .gallery > .gallery__item {
+	display: inline-block;
+	width: 100%;
+	margin: 0 0 2rem; /* bottom margin only */
+	break-inside: avoid;
+	-webkit-column-break-inside: avoid;
+	page-break-inside: avoid;
+}
+
+
+/* --------------------------------------------------------------
+ * FIX 2 — iOS Safari: hero video black-screen bug
+ *
+ * Summary:
+ * iOS Safari sometimes renders videos as a black rectangle when the
+ * video is inside a clipped/filtered container (border-radius,
+ * overflow:hidden, SVG filters). Audio plays but video does not.
+ *
+ * Fix:
+ * Relax clipping on the iOS wrapper and remove problematic filters
+ * to avoid GPU compositing failures.
+ * -------------------------------------------------------------- */
+.is-ios-safari .project-video-player--mobile .video-wrapper-mobile {
+	overflow: visible;
+}
+
+.is-ios-safari .project-video-player--mobile .play-button-mobile svg {
+	filter: none;
+}
+
+
+/* other fixes */
+@media (max-width: 48rem) {
+    .project-hero--desktop:has( > .project-hero-image){
+        display: block;
+    }
+}

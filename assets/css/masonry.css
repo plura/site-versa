@@ -1,0 +1,25 @@
+/* Activate Masonry mode */
+.project-gallery .gallery.has-masonry {
+	column-count: initial;
+	column-gap: 0;
+}
+
+/* Reset items from column layout */
+.project-gallery .gallery.has-masonry .gallery__item {
+	display: block;
+	width: calc(50% - 1rem);
+	margin: 0 0 2rem;
+
+	break-inside: initial;
+	-webkit-column-break-inside: initial;
+	page-break-inside: initial;
+}
+
+/* Safari override reset */
+.is-safari .project-gallery .gallery.has-masonry > .gallery__item {
+	display: block;
+
+	break-inside: initial;
+	-webkit-column-break-inside: initial;
+	page-break-inside: initial;
+}

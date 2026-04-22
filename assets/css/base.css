@@ -1,0 +1,6 @@
+:root {
+	--versa-global-colors-salmon: #f37d6e;
+	--versa-global-colors-green: #9cff39;
+	--versa-global-colors-light: #f5f5f1;
+	--versa-global-colors-accent: var(--versa-global-colors-salmon)
+}
