@@ -284,8 +284,6 @@ function restartAutoplayVideos(videos) {
 
 	if (!videos || !videos.length) return;
 
-	console.log('[Plura • SafariFix] Forcing autoplay on grid videos:', videos.length);
-
 	videos.forEach(video => {
 
 		setVideoProps(video);
@@ -306,7 +304,6 @@ function setVideoProps(video, { muted = true, autoplay = true, playsInline = tru
 	video.playsInline = playsInline;
 	video.loop = loop;
 	video.controls = controls;
-	console.log('[Plura • SafariFix] Setting hero video props:', { muted, autoplay, playsInline, loop, controls });
 	Object.entries({ muted, autoplay, playsinline: playsInline, loop, controls }).forEach(([key, value]) => {
 		if (value) {
 			video.setAttribute(key, '');
@@ -384,6 +381,7 @@ function setupClickToPlayVideo(video, { volume = 0.4, toggle = true } = {}) {
 	const overlay = document.createElement('button');
 	overlay.type = 'button';
 	overlay.className = 'plura-overrides-video-overlay-play';
+	overlay.setAttribute('aria-label', 'Play video');
 
 	video.insertAdjacentElement('afterend', overlay);
 

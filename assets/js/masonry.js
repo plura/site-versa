@@ -32,5 +32,7 @@ function initMasonry(grid) {
 	})
 	.catch((err) => {
 		console.error("Masonry failed:", err);
+		// fall back to the CSS column layout
+		grid.classList.remove("has-masonry");
 	});
 }

@@ -194,7 +194,7 @@ button.plura-overrides-video-overlay-play::before {
 .primary-menu-wrapper ul li>a:hover,
 
 /* Globals: Footer */
-:not(.page-node-18) .site-footer__section--first h3 span,
+body:not(.page-node-18) .site-footer__section--first h3 span,
 .site-footer__section--second h3,
 .site-footer__section--third h3,
 

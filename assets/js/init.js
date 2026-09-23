@@ -22,18 +22,13 @@ document.documentElement.classList.add('is-safari');
 // Add a class to <html> so plura-overrides.css can target iOS Safari only
 if (isIOSSafari()) {
 	document.documentElement.classList.add('is-ios-safari');
-	console.log('[Plura • SafariFix] is-ios-safari class added to <html>');
 }
-
-console.log('[Plura • SafariFix] Safari detected — enabling fixes');
 
 
 //--------------------------------------------------------------
 // Initialisation
 //--------------------------------------------------------------
 function init() {
-
-	console.log('[Plura • SafariFix] Initialising video fixes…');
 
 	const grid_videos = GRID_VIDEOS(), hero_videos = HERO_VIDEOS();
 
@@ -45,7 +40,6 @@ function init() {
 	hero_videos.forEach(hero_video => {
 
 		if (!isIOS()) {
-			console.log('NOT iOS Safari');
 			setupClickToPlayVideo(hero_video);
 			//setupHeroVideoAutoplay(hero_video); // desktop/laptop Safari
 		} else {
@@ -53,18 +47,15 @@ function init() {
 			if (hero_video) {
 				setVideoPosterFromFrame({
 					video: hero_video,
-					time: 0.5,
-					log: true
-				});
+					time: 0.5
+				}).catch(() => {}); // no poster on failure
 			}
 		}
 
 	});
 
 	//replace logo with inline SVG for better control
-	replaceImgWithInlineSVG('header img[src*="logo.svg"]');
-
-	console.log(document.querySelectorAll('header img[src*="logo.svg"]'));
+	replaceImgWithInlineSVG('header img[src*="logo.svg"]').catch(() => {}); // keeps the <img> on failure
 
 	// usage
 	const grid = document.querySelector(".project-gallery .gallery");
@@ -87,8 +78,6 @@ window.addEventListener('pageshow', (event) => {
 	const grid_videos = GRID_VIDEOS();
 
 	if (grid_videos.length > 0) {
-		console.log('[Plura • SafariFix] pageshow → re-running grid autoplay fix');
-
 		restartAutoplayVideos(grid_videos);
 		setTimeout(() => restartAutoplayVideos(GRID_VIDEOS()), 50);
 	}

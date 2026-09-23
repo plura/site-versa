@@ -168,6 +168,8 @@ function initMasonry(grid) {
 	})
 	.catch((err) => {
 		console.error("Masonry failed:", err);
+		// fall back to the CSS column layout
+		grid.classList.remove("has-masonry");
 	});
 }
 
@@ -460,8 +462,6 @@ function restartAutoplayVideos(videos) {
 
 	if (!videos || !videos.length) return;
 
-	console.log('[Plura • SafariFix] Forcing autoplay on grid videos:', videos.length);
-
 	videos.forEach(video => {
 
 		setVideoProps(video);
@@ -482,7 +482,6 @@ function setVideoProps(video, { muted = true, autoplay = true, playsInline = tru
 	video.playsInline = playsInline;
 	video.loop = loop;
 	video.controls = controls;
-	console.log('[Plura • SafariFix] Setting hero video props:', { muted, autoplay, playsInline, loop, controls });
 	Object.entries({ muted, autoplay, playsinline: playsInline, loop, controls }).forEach(([key, value]) => {
 		if (value) {
 			video.setAttribute(key, '');
@@ -560,6 +559,7 @@ function setupClickToPlayVideo(video, { volume = 0.4, toggle = true } = {}) {
 	const overlay = document.createElement('button');
 	overlay.type = 'button';
 	overlay.className = 'plura-overrides-video-overlay-play';
+	overlay.setAttribute('aria-label', 'Play video');
 
 	video.insertAdjacentElement('afterend', overlay);
 
@@ -617,18 +617,13 @@ document.documentElement.classList.add('is-safari');
 // Add a class to <html> so plura-overrides.css can target iOS Safari only
 if (isIOSSafari()) {
 	document.documentElement.classList.add('is-ios-safari');
-	console.log('[Plura • SafariFix] is-ios-safari class added to <html>');
 }
-
-console.log('[Plura • SafariFix] Safari detected — enabling fixes');
 
 
 //--------------------------------------------------------------
 // Initialisation
 //--------------------------------------------------------------
 function init() {
-
-	console.log('[Plura • SafariFix] Initialising video fixes…');
 
 	const grid_videos = GRID_VIDEOS(), hero_videos = HERO_VIDEOS();
 
@@ -640,7 +635,6 @@ function init() {
 	hero_videos.forEach(hero_video => {
 
 		if (!isIOS()) {
-			console.log('NOT iOS Safari');
 			setupClickToPlayVideo(hero_video);
 			//setupHeroVideoAutoplay(hero_video); // desktop/laptop Safari
 		} else {
@@ -648,18 +642,15 @@ function init() {
 			if (hero_video) {
 				setVideoPosterFromFrame({
 					video: hero_video,
-					time: 0.5,
-					log: true
-				});
+					time: 0.5
+				}).catch(() => {}); // no poster on failure
 			}
 		}
 
 	});
 
 	//replace logo with inline SVG for better control
-	replaceImgWithInlineSVG('header img[src*="logo.svg"]');
-
-	console.log(document.querySelectorAll('header img[src*="logo.svg"]'));
+	replaceImgWithInlineSVG('header img[src*="logo.svg"]').catch(() => {}); // keeps the <img> on failure
 
 	// usage
 	const grid = document.querySelector(".project-gallery .gallery");
@@ -682,8 +673,6 @@ window.addEventListener('pageshow', (event) => {
 	const grid_videos = GRID_VIDEOS();
 
 	if (grid_videos.length > 0) {
-		console.log('[Plura • SafariFix] pageshow → re-running grid autoplay fix');
-
 		restartAutoplayVideos(grid_videos);
 		setTimeout(() => restartAutoplayVideos(GRID_VIDEOS()), 50);
 	}
