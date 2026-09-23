@@ -47,15 +47,4 @@ The agent will automatically:
 
 ## Deployment
 
-After compilation, copy the files to your Drupal theme:
-```bash
-cp overrides/plura-overrides.css httpdocs/web/themes/custom/versa/css/
-cp overrides/plura-overrides.js httpdocs/web/themes/custom/versa/js/
-```
-
-Then clear Drupal cache:
-```bash
-drush cr
-```
-
-Hard refresh your browser to verify changes.
+Upload both override files and clear the Drupal cache — see [README → Deployment](README.md#deployment).

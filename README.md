@@ -67,20 +67,25 @@ plura_overrides:
 
 ### 1. Update Override Files
 
-Copy updated files to the theme directory:
-```
-httpdocs/web/themes/custom/versa/css/plura-overrides.css
-httpdocs/web/themes/custom/versa/js/plura-overrides.js
+Upload to the theme directory (server: `versapm@82.208.20.190`):
+```bash
+scp overrides/plura-overrides.css versapm@82.208.20.190:/var/www/vhosts/versa-plus.com/httpdocs/web/themes/custom/versa/css/
+scp overrides/plura-overrides.js  versapm@82.208.20.190:/var/www/vhosts/versa-plus.com/httpdocs/web/themes/custom/versa/js/
 ```
 
 ### 2. Clear Drupal Cache
 
-Required after modifying `versa.info.yml`, `versa.libraries.yml`, or override files:
+Required after modifying `versa.info.yml`, `versa.libraries.yml`, or override files — Drupal serves aggregated copies from `sites/default/files/{css,js}/`, which stay stale until rebuilt.
+
+Log in interactively, then run:
 
 ```bash
+ssh versapm@82.208.20.190
 cd /var/www/vhosts/versa-plus.com/httpdocs
 vendor/bin/drush cr
 ```
+
+**Don't** use the one-liner `ssh versapm@… "… drush cr"`: non-interactive shells get the system PHP 8.1, and Composer requires ≥ 8.3 (fatal `platform_check.php` error). The interactive login shell picks up the right PHP.
 
 Then hard refresh your browser.
 
