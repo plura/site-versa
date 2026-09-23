@@ -6,7 +6,7 @@ Version-controlled CSS and JavaScript overrides for the Versa Drupal theme on ve
 
 - **`overrides/`** — CSS and JavaScript override files
 - **`assets/`** — Supporting assets (SVGs, etc.)
-- **Other test folders** — Development only
+- **`test-video/`** — Standalone video test page, uploaded via SFTP to Catarina's host (intermediary for this project). Copy `.vscode/sftp.json.example` to `sftp.json` and fill in credentials.
 
 ## Drupal Theme Integration
 

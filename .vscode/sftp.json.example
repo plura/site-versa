@@ -3,11 +3,11 @@
 	{
 		"context": "test-video",
 		"name": "Basecamp",
-		"host": "194.39.124.145",
+		"host": "",
 		"protocol": "ftp",
 		"port": 21,
-		"username": "basecamp",
-		"password": "cZU9;T7i1T2hj)",
+		"username": "",
+		"password": "",
 		"remotePath": "/public_html/test-video",
 		"uploadOnSave": false,
 		"useTempFile": false,
@@ -15,7 +15,8 @@
 		"syncMode": "update",
 		"syncOption": {
 			"delete": true
-		}
+		},
+		"ignore": [".gitkeep", ".git", ".gitignore", ".claude", "*.code-workspace"]
 	}
 
 ]

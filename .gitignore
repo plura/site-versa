@@ -1,1 +1,4 @@
 credentials
+.vscode/sftp.json
+!.vscode/sftp.json.example
+*.code-workspace
