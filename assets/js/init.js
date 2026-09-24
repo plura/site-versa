@@ -10,14 +10,12 @@ const GRID_VIDEOS = () => document.querySelectorAll(GRID_VIDEOS_SELECTOR);
 const HERO_VIDEOS = () => document.querySelectorAll(HERO_VIDEOS_SELECTOR);
 
 //--------------------------------------------------------------
-// Safari gating + HTML classes
+// HTML classes
 //--------------------------------------------------------------
-/* if (!isSafari()) {
-	console.log('[Plura • SafariFix] Not Safari — skipping');
-	return;
-} else { */
+// Added in every browser despite the name: the gallery rules in fix.css,
+// layout.css and masonry.css depend on it, so gating it to Safari would
+// drop them elsewhere.
 document.documentElement.classList.add('is-safari');
-/* } */
 
 // Add a class to <html> so plura-overrides.css can target iOS Safari only
 if (isIOSSafari()) {
@@ -41,7 +39,6 @@ function init() {
 
 		if (!isIOS()) {
 			setupClickToPlayVideo(hero_video);
-			//setupHeroVideoAutoplay(hero_video); // desktop/laptop Safari
 		} else {
 
 			if (hero_video) {
@@ -54,10 +51,9 @@ function init() {
 
 	});
 
-	//replace logo with inline SVG for better control
+	// Inline the logo so layout.css can style its paths (blend mode, white fill)
 	replaceImgWithInlineSVG('header img[src*="logo.svg"]').catch(() => {}); // keeps the <img> on failure
 
-	// usage
 	const grid = document.querySelector(".project-gallery .gallery");
 	if (grid) initMasonry(grid);
 
@@ -73,6 +69,8 @@ if (document.readyState === 'loading') {
 //--------------------------------------------------------------
 // Back/forward cache restore (Safari)
 //--------------------------------------------------------------
+// pageshow also fires on normal loads, so this retries autoplay once the
+// page has fully loaded too.
 window.addEventListener('pageshow', (event) => {
 
 	const grid_videos = GRID_VIDEOS();
@@ -83,9 +81,3 @@ window.addEventListener('pageshow', (event) => {
 	}
 
 });
-
-
-//replace favicon
-/* 	replaceFavicon('/themes/custom/versa/logo-plus.svg', {
-		type: 'image/svg+xml'
-	}); */

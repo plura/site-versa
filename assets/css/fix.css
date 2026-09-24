@@ -1,9 +1,10 @@
 /* ==============================================================
- * SAFARI & IOS FIXES
- * Temporary browser-specific patches applied externally because the
- * Drupal theme cannot be refactored at this stage.
+ * FUNCTIONAL FIXES (Safari/iOS + theme bugs)
+ * Patched here because the Drupal theme cannot be refactored at
+ * this stage. These are NOT design changes.
  *
- * These are functional fixes — NOT design changes.
+ * `.is-safari` is set in every browser (init.js), so rules scoped
+ * to it apply everywhere.
  * ============================================================== */
 
 
@@ -17,6 +18,9 @@
  * Fix:
  * Use inline-block items, avoid top margins, and force overflow
  * handling to normalize Safari’s column rendering.
+ *
+ * Now only visible while Masonry isn't active (scripts loading or
+ * failed); masonry.css overrides it once `.has-masonry` is set.
  * -------------------------------------------------------------- */
 .is-safari .project-gallery .gallery {
 	column-count: 2;
@@ -55,9 +59,14 @@
 }
 
 
-/* other fixes */
+/* --------------------------------------------------------------
+ * FIX 3 — Mobile: image heroes disappear
+ *
+ * The theme hides .project-hero--desktop at ≤ 48rem and only renders
+ * a mobile hero for videos, so image heroes vanished on mobile.
+ * -------------------------------------------------------------- */
 @media (max-width: 48rem) {
-    .project-hero--desktop:has( > .project-hero-image){
-        display: block;
-    }
+	.project-hero--desktop:has( > .project-hero-image) {
+		display: block;
+	}
 }

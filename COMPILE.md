@@ -1,50 +1,25 @@
-# Asset Compilation Guide
+# Compiling the overrides
 
-## Overview
-This document describes how to compile individual asset files into the final override files for Drupal deployment.
+From `core/` in Git Bash:
 
-## Compilation Process
+```bash
+sh compile.sh
+```
 
-### What Gets Combined
+This rebuilds both files in `overrides/` from `assets/`, always overwriting them. Commit the sources and the rebuilt files together, then deploy (see [README → Deployment](README.md#deployment)).
+
+## Build order
 
 **CSS** (`assets/css/` → `overrides/plura-overrides.css`):
-- `base.css` — CSS variables and base styles
-- `fix.css` — Safari and iOS browser fixes
-- `layout.css` — Layout overrides
-- `masonry.css` — Masonry gallery styles
+1. `base.css` — colour variables
+2. `fix.css` — Safari/iOS and theme bug fixes
+3. `layout.css` — client-requested design and colour overrides
+4. `masonry.css` — Masonry gallery layout (must follow `fix.css` to override its column layout)
 
-**JavaScript** (`assets/js/` → `overrides/plura-overrides.js`):
-- `global.js` — Global helper functions
-- `masonry.js` — Masonry initialization
-- `video.js` — Video handling and Safari fixes
-- `init.js` — **Last** (initialization and event listeners)
+**JavaScript** (`assets/js/` → `overrides/plura-overrides.js`), wrapped in one IIFE:
+1. `global.js` — shared helpers (browser detection, logging, SVG inlining)
+2. `masonry.js` — Masonry gallery
+3. `video.js` — grid and hero video fixes
+4. `init.js` — **last**: sets HTML classes and runs everything
 
-### Output Requirements
-
-**CSS File:**
-- Single file: `overrides/plura-overrides.css`
-- Section headers showing which asset file each block came from
-
-**JavaScript File:**
-- Single file: `overrides/plura-overrides.js`
-- Wrapped in IIFE: `(function () { /* all code here */ })()`
-- `init.js` loaded/executed last
-
-## How to Trigger Compilation
-
-Simply ask:
-```
-"Compile assets into override files"
-```
-
-The agent will automatically:
-1. Read all CSS files from `assets/css/`
-2. Read all JS files from `assets/js/` 
-3. Combine them in the correct order
-4. Wrap JS in IIFE
-5. Write `overrides/plura-overrides.css` and `overrides/plura-overrides.js`
-6. Commit and push changes
-
-## Deployment
-
-Upload both override files and clear the Drupal cache — see [README → Deployment](README.md#deployment).
+A new source file must be added to the list in `compile.sh` and here.

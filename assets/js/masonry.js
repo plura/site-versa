@@ -1,10 +1,22 @@
-
+/**
+ * Lay out the project gallery with Masonry (imagesLoaded + Masonry from unpkg).
+ * Falls back to the CSS column layout in fix.css if either fails to load.
+ *
+ * @param {HTMLElement|null} grid The `.gallery` element.
+ * @returns {void}
+ */
 function initMasonry(grid) {
 	if (!grid) return;
 
 	// prevent column layout from applying
 	grid.classList.add("has-masonry");
 
+	/**
+	 * Append a script tag and settle when it loads or fails.
+	 *
+	 * @param {string} src
+	 * @returns {Promise<Event>}
+	 */
 	function loadScript(src) {
 		return new Promise((resolve, reject) => {
 			const s = document.createElement("script");

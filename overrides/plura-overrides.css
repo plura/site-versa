@@ -17,11 +17,12 @@
  * FIX.CSS
  * =================================================================== */
 /* ==============================================================
- * SAFARI & IOS FIXES
- * Temporary browser-specific patches applied externally because the
- * Drupal theme cannot be refactored at this stage.
+ * FUNCTIONAL FIXES (Safari/iOS + theme bugs)
+ * Patched here because the Drupal theme cannot be refactored at
+ * this stage. These are NOT design changes.
  *
- * These are functional fixes — NOT design changes.
+ * `.is-safari` is set in every browser (init.js), so rules scoped
+ * to it apply everywhere.
  * ============================================================== */
 
 
@@ -35,6 +36,9 @@
  * Fix:
  * Use inline-block items, avoid top margins, and force overflow
  * handling to normalize Safari’s column rendering.
+ *
+ * Now only visible while Masonry isn't active (scripts loading or
+ * failed); masonry.css overrides it once `.has-masonry` is set.
  * -------------------------------------------------------------- */
 .is-safari .project-gallery .gallery {
 	column-count: 2;
@@ -73,11 +77,16 @@
 }
 
 
-/* other fixes */
+/* --------------------------------------------------------------
+ * FIX 3 — Mobile: image heroes disappear
+ *
+ * The theme hides .project-hero--desktop at ≤ 48rem and only renders
+ * a mobile hero for videos, so image heroes vanished on mobile.
+ * -------------------------------------------------------------- */
 @media (max-width: 48rem) {
-    .project-hero--desktop:has( > .project-hero-image){
-        display: block;
-    }
+	.project-hero--desktop:has( > .project-hero-image) {
+		display: block;
+	}
 }
 
 /* ===================================================================
@@ -91,29 +100,19 @@
  * These are NOT browser fixes.
  * ============================================================== */
 
-/* Header blend-mode inversion effect */
-/* body:not(.nav-open) header img,
-body:not(.nav-open) header svg path:not(#versa-logo-plus) {
-	filter: invert(1);
-	mix-blend-mode: difference;
-} */
-
+/* Header logo (inlined as <svg> by init.js so its paths can be styled) */
 body header svg {
 	max-height: 45px;
 }
 
-/* body:not(.nav-open) header svg #versa-logo-blend-group {
-  filter: invert(1);
-  mix-blend-mode: difference;
-} */
-
-
-/* not nav-open and not on about page */
+/* Blend-mode inversion keeps the header readable over any content.
+   Skipped when the menu is open and on the dark About/Contact pages,
+   which get a white logo instead (the "+" keeps its own colour). */
 body:not(
 	.nav-open,
 	.page-node-16, /* about page */
 	.page-node-18  /* contact page */
-) header /* svg #versa-logo-blend-group */ {
+) header {
   filter: invert(1);
   mix-blend-mode: difference;
 }
@@ -128,7 +127,7 @@ body:is(
 
 
 
-/* hero videos */
+/* Hero video play overlay (added by setupClickToPlayVideo in video.js) */
 button.plura-overrides-video-overlay-play {
 	background-color: rgba(0,0,0,.5);
 	border: none;
@@ -153,7 +152,7 @@ button.plura-overrides-video-overlay-play::before {
 	background-position: center;
 	background-size: contain;
 
-	/* NOTE: keep this all on ONE line in your CSS */
+	/* white play-circle icon */
 	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%209.003a1%201%200%200%201%201.517-.859l4.997%202.997a1%201%200%200%201%200%201.718l-4.997%202.997A1%201%200%200%201%209%2014.996z%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22/%3E%3C/svg%3E");
 }
 
@@ -171,7 +170,8 @@ button.plura-overrides-video-overlay-play::before {
 	}
 }
 
-/* Hide project name in marquee on mobile, since it's redundant with the title above. Leave only the brand */
+/* Marquee shows the brand only: the campaign name (span.project-name) is hidden
+   at every width and appears nowhere else on the page. */
 .project-title-marquee__item span.project-name {
 	display: none;
 }
@@ -234,16 +234,17 @@ body:not(.page-node-18) .site-footer__section--first h3 span,
 
 
 
+/* Instagram icon is an <img>, so recolour it with filters (≈ accent salmon #f37d6e) */
 #block-versa-instagram img {
 	filter: brightness(0) saturate(100%) invert(57%) sepia(13%) saturate(2052%) hue-rotate(318deg) brightness(103%) contrast(91%);
 }
 
-/* Globals: Loader Spiner */
+/* Globals: Loader Spinner */
 .loader-spinner {
 	border-top-color: var(--versa-global-colors-accent) !important;
 }
 
-/* Fix override 'overreach' */
+/* Contact: the footer h3 is accent (above), so keep its span from inheriting it */
 .page-node-18.page-theme-dark .site-footer__section--first h3 span {
 	color: var(--versa-global-colors-light) !important;
 }

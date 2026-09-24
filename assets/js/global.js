@@ -88,35 +88,3 @@ async function replaceImgWithInlineSVG(img) {
 
 	return inlineSvg;
 }
-
-
-/**
- * Replaces (or creates) the page favicon.
- *
- * @param {string} href Path/URL to the favicon image (e.g. "/assets/favicon.svg" or "/favicon.ico").
- * @param {object} [options]
- * @param {string} [options.rel="icon"] Link rel attribute ("icon", "shortcut icon", "apple-touch-icon", etc.).
- * @param {string} [options.type] Optional MIME type (e.g. "image/svg+xml", "image/png", "image/x-icon").
- * @returns {HTMLLinkElement} The favicon <link> element.
- */
-/* 	function replaceFavicon(href, options = {}) {
-		const { rel = 'icon', type } = options;
-
-		let link = document.querySelector(`link[rel="${rel}"]`);
-
-		if (!link) {
-			link = document.createElement('link');
-			link.setAttribute('rel', rel);
-			document.head.appendChild(link);
-		}
-
-		link.setAttribute('href', href);
-
-		if (type) {
-			link.setAttribute('type', type);
-		} else {
-			link.removeAttribute('type');
-		}
-
-		return link;
-	} */

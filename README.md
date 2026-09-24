@@ -1,11 +1,21 @@
 # site-versa
 
-Version-controlled CSS and JavaScript overrides for the Versa Drupal theme on versa-plus.com. Maintains a clean history, enables safe updates, and supports easy rollback.
+CSS and JavaScript overrides for the Versa Drupal theme on versa-plus.com.
+
+## Workflow
+
+1. Edit the sources in `assets/css/` and `assets/js/`
+2. Run `sh compile.sh` (see [COMPILE.md](COMPILE.md))
+3. Commit the sources and rebuilt `overrides/` together
+4. Deploy (see [Deployment](#deployment))
 
 ## Repository Structure
 
-- **`overrides/`** — CSS and JavaScript override files
-- **`assets/`** — Supporting assets (SVGs, etc.)
+- **`assets/css/`, `assets/js/`** — source files; edit these
+- **`overrides/`** — built output (`plura-overrides.css`/`.js`) that gets uploaded; never edit directly
+- **`assets/media/`** — logo SVGs
+- **`compile.sh`** — builds `overrides/` from the sources
+- **`credentials`** — server/cPanel access, gitignored
 - **`test-video/`** — Standalone video test page, uploaded via SFTP to Catarina's host (intermediary for this project). Copy `.vscode/sftp.json.example` to `sftp.json` and fill in credentials.
 
 ## Drupal Theme Integration
@@ -43,25 +53,7 @@ libraries:
 
 **Note:** Paths in `versa.libraries.yml` are relative to the theme root.
 
-### Adding Override Files
-
-1. Create the file in the theme directory
-2. Register in `versa.libraries.yml` under the same library
-3. No changes needed to `versa.info.yml` unless you rename the library key
-
-Example of adding a new CSS file to the library:
-
-```yml
-plura_overrides:
-  css:
-    theme:
-      css/plura-overrides.css: {}
-      css/plura-extra.css: {}
-  js:
-    js/plura-overrides.js: {}
-```
-
-**When renaming files or library keys:** Update all references in `versa.libraries.yml`, `versa.info.yml`, and any Twig templates using `attach_library()`.
+New source files go into the existing two outputs via `compile.sh`, so the library rarely changes. If you rename the output files or the library key, update `versa.libraries.yml`, `versa.info.yml`, and any Twig `attach_library()` calls, then clear the cache.
 
 ## Deployment
 

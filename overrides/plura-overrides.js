@@ -99,48 +99,28 @@ async function replaceImgWithInlineSVG(img) {
 	return inlineSvg;
 }
 
-
-/**
- * Replaces (or creates) the page favicon.
- *
- * @param {string} href Path/URL to the favicon image (e.g. "/assets/favicon.svg" or "/favicon.ico").
- * @param {object} [options]
- * @param {string} [options.rel="icon"] Link rel attribute ("icon", "shortcut icon", "apple-touch-icon", etc.).
- * @param {string} [options.type] Optional MIME type (e.g. "image/svg+xml", "image/png", "image/x-icon").
- * @returns {HTMLLinkElement} The favicon <link> element.
- */
-/* 	function replaceFavicon(href, options = {}) {
-		const { rel = 'icon', type } = options;
-
-		let link = document.querySelector(`link[rel="${rel}"]`);
-
-		if (!link) {
-			link = document.createElement('link');
-			link.setAttribute('rel', rel);
-			document.head.appendChild(link);
-		}
-
-		link.setAttribute('href', href);
-
-		if (type) {
-			link.setAttribute('type', type);
-		} else {
-			link.removeAttribute('type');
-		}
-
-		return link;
-	} */
-
 /* ===================================================================
  * MASONRY.JS
  * =================================================================== */
-
+/**
+ * Lay out the project gallery with Masonry (imagesLoaded + Masonry from unpkg).
+ * Falls back to the CSS column layout in fix.css if either fails to load.
+ *
+ * @param {HTMLElement|null} grid The `.gallery` element.
+ * @returns {void}
+ */
 function initMasonry(grid) {
 	if (!grid) return;
 
 	// prevent column layout from applying
 	grid.classList.add("has-masonry");
 
+	/**
+	 * Append a script tag and settle when it loads or fails.
+	 *
+	 * @param {string} src
+	 * @returns {Promise<Event>}
+	 */
 	function loadScript(src) {
 		return new Promise((resolve, reject) => {
 			const s = document.createElement("script");
@@ -177,17 +157,14 @@ function initMasonry(grid) {
  * VIDEO.JS
  * =================================================================== */
 /**
- * Safari-specific fixes for:
+ * Video fixes, written for Safari (macOS + iOS) but run in every browser
+ * (the Safari check in init.js is disabled).
  *
- * 1) Grid videos not autoplaying after returning via back-navigation (bfcache)
- * 2) Hero video logic (kept as-is for now; further work later)
- *
- * Grid Fix Summary:
- * - Safari/iOS requires autoplay + muted + playsinline attributes
- * - When the page is restored from bfcache, autoplay state is often lost
- * - Solution: on load + on pageshow, forcibly reapply attributes & call play()
- *
- * NOTE: Only Safari (macOS + iOS). Chrome/Firefox/etc remain untouched.
+ * 1) Grid videos: iOS needs autoplay + muted + playsinline for inline playback,
+ *    and Safari loses autoplay after back-navigation (bfcache). Fix: reapply the
+ *    attributes and call play() on load and on pageshow.
+ * 2) Hero videos: click-to-play overlay (with sound) outside iOS; on iOS, a
+ *    poster captured from a video frame.
  */
 
 /**
@@ -475,7 +452,14 @@ function restartAutoplayVideos(videos) {
 
 
 
-// Ensure hero video has the right properties/attributes for autoplay
+/**
+ * Set playback properties and mirror them as HTML attributes, since Safari's
+ * autoplay rules read the attributes (used for grid videos).
+ *
+ * @param {HTMLVideoElement} video
+ * @param {{ muted?: boolean, autoplay?: boolean, playsInline?: boolean, loop?: boolean, controls?: boolean }} [opts]
+ * @returns {void}
+ */
 function setVideoProps(video, { muted = true, autoplay = true, playsInline = true, loop = true, controls = false } = {}) {
 	video.muted = muted;
 	video.autoplay = autoplay;
@@ -605,14 +589,12 @@ const GRID_VIDEOS = () => document.querySelectorAll(GRID_VIDEOS_SELECTOR);
 const HERO_VIDEOS = () => document.querySelectorAll(HERO_VIDEOS_SELECTOR);
 
 //--------------------------------------------------------------
-// Safari gating + HTML classes
+// HTML classes
 //--------------------------------------------------------------
-/* if (!isSafari()) {
-	console.log('[Plura • SafariFix] Not Safari — skipping');
-	return;
-} else { */
+// Added in every browser despite the name: the gallery rules in fix.css,
+// layout.css and masonry.css depend on it, so gating it to Safari would
+// drop them elsewhere.
 document.documentElement.classList.add('is-safari');
-/* } */
 
 // Add a class to <html> so plura-overrides.css can target iOS Safari only
 if (isIOSSafari()) {
@@ -636,7 +618,6 @@ function init() {
 
 		if (!isIOS()) {
 			setupClickToPlayVideo(hero_video);
-			//setupHeroVideoAutoplay(hero_video); // desktop/laptop Safari
 		} else {
 
 			if (hero_video) {
@@ -649,10 +630,9 @@ function init() {
 
 	});
 
-	//replace logo with inline SVG for better control
+	// Inline the logo so layout.css can style its paths (blend mode, white fill)
 	replaceImgWithInlineSVG('header img[src*="logo.svg"]').catch(() => {}); // keeps the <img> on failure
 
-	// usage
 	const grid = document.querySelector(".project-gallery .gallery");
 	if (grid) initMasonry(grid);
 
@@ -668,6 +648,8 @@ if (document.readyState === 'loading') {
 //--------------------------------------------------------------
 // Back/forward cache restore (Safari)
 //--------------------------------------------------------------
+// pageshow also fires on normal loads, so this retries autoplay once the
+// page has fully loaded too.
 window.addEventListener('pageshow', (event) => {
 
 	const grid_videos = GRID_VIDEOS();
@@ -678,11 +660,5 @@ window.addEventListener('pageshow', (event) => {
 	}
 
 });
-
-
-//replace favicon
-/* 	replaceFavicon('/themes/custom/versa/logo-plus.svg', {
-		type: 'image/svg+xml'
-	}); */
 
 })();

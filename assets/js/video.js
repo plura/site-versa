@@ -1,15 +1,12 @@
 /**
- * Safari-specific fixes for:
+ * Video fixes, written for Safari (macOS + iOS) but run in every browser
+ * (the Safari check in init.js is disabled).
  *
- * 1) Grid videos not autoplaying after returning via back-navigation (bfcache)
- * 2) Hero video logic (kept as-is for now; further work later)
- *
- * Grid Fix Summary:
- * - Safari/iOS requires autoplay + muted + playsinline attributes
- * - When the page is restored from bfcache, autoplay state is often lost
- * - Solution: on load + on pageshow, forcibly reapply attributes & call play()
- *
- * NOTE: Only Safari (macOS + iOS). Chrome/Firefox/etc remain untouched.
+ * 1) Grid videos: iOS needs autoplay + muted + playsinline for inline playback,
+ *    and Safari loses autoplay after back-navigation (bfcache). Fix: reapply the
+ *    attributes and call play() on load and on pageshow.
+ * 2) Hero videos: click-to-play overlay (with sound) outside iOS; on iOS, a
+ *    poster captured from a video frame.
  */
 
 /**
@@ -297,7 +294,14 @@ function restartAutoplayVideos(videos) {
 
 
 
-// Ensure hero video has the right properties/attributes for autoplay
+/**
+ * Set playback properties and mirror them as HTML attributes, since Safari's
+ * autoplay rules read the attributes (used for grid videos).
+ *
+ * @param {HTMLVideoElement} video
+ * @param {{ muted?: boolean, autoplay?: boolean, playsInline?: boolean, loop?: boolean, controls?: boolean }} [opts]
+ * @returns {void}
+ */
 function setVideoProps(video, { muted = true, autoplay = true, playsInline = true, loop = true, controls = false } = {}) {
 	video.muted = muted;
 	video.autoplay = autoplay;
